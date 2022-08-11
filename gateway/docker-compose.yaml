@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v2.8
+    networks:
+      - internal
+    command:
+      - --log.level=DEBUG
+      - --providers.docker.constraints=Label(`traefik.constraint-label`, `internal`)
+      - --entrypoints.http.address=:80
+      - --providers.docker
+      - --providers.docker.swarmmode
+      - --providers.docker.exposedbydefault=false
+      - --accesslog
+      - --log
+      - --api
+      - --serverstransport.insecureskipverify=true
+      - dashboard=true
+    ports:
+      - "80:80"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=internal
+        - traefik.constraint-label=internal
+        - traefik.http.routers.traefik.rule=Host(`dashboard.traefik.int`)
+        - traefik.http.routers.traefik.service=api@internal
+        - traefik.http.services.traefik.loadbalancer.server.port=9999
+      placement:
+        constraints:
+          - node.role == manager
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  internal:
+    external: true
