@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7.0.4
+    networks:
+      - internal
+    hostname: storages.redis-queue.int
+    volumes:
+      - redis-queue:/var/lib/redis
+    restart: always
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+      placement:
+        constraints:
+          - node.labels.redis-queue == yes
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  redis-queue:
+    driver: local

@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7.0.4
+    networks:
+      - internal
+    hostname: storages.redis-cache.int
+    volumes:
+      - redis-cache:/var/lib/redis
+    restart: always
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
+      placement:
+        constraints:
+          - node.labels.redis-cache == yes
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  redis-cache:
+    driver: local
