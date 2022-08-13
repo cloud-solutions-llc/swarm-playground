@@ -37,3 +37,9 @@ docker node update --label-add kibana=yes {node id}
 | [dashboard.traefik.int](http://dashboard.traefik.int) | The trafiek dashboard  |
 | [influxdb.swarm.int](http://influxdb.swarm.int)       | The indluxdb dashboard |
 | [grafana.swarm.int](http://grafana.swarm.int)         | The grafana dashboard  |
+
+
+# Notes
+
+### Telegraf 
+Create a bucket in InfluxDB and put the auth token for Telegraf as INFLUX_TOKEN environment variable

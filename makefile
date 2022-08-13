@@ -16,4 +16,5 @@ storages:
 .PHONY: monitoring
 monitoring:
 	cd ./monitoring/grafana && sh ./deploy.sh && cd ../..
+	cd ./monitoring/telegraf && sh ./deploy.sh && cd ../..
 
