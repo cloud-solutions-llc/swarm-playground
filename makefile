@@ -12,3 +12,7 @@ storages:
 	cd ./storages/mysql && sh ./deploy.sh && cd ../..
 	cd ./storages/redis-cache && sh ./deploy.sh && cd ../..
 	cd ./storages/redis-queue && sh ./deploy.sh && cd ../..
+
+.PHONY: monitoring
+monitoring:
+	cd ./monitoring/grafana && sh ./deploy.sh && cd ../..
