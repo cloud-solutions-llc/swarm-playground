@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  grafana:
+    image: grafana/grafana:9.0.7
+    networks:
+      - internal
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=eP61T5X2Q8Sc5yf9
+      - GF_AUTH_BASIC_ENABLED=false
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=internal
+        - traefik.constraint-label=internal
+        - traefik.http.routers.grafana.entrypoints=http
+        - traefik.http.services.grafana.loadbalancer.server.port=3000
+        - traefik.http.routers.grafana.rule=Host(`grafana.swarm.int`)
+        - traefik.http.routers.grafana.service=grafana@docker
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.2'
+          memory: 128M
+      placement:
+        constraints:
+          - node.labels.grafana == yes
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  grafana_data:
+    driver: local
