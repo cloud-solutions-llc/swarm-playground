@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  kibana:
+    image: kibana:8.3.3
+    hostname: logs.kibana.int
+    networks:
+      - internal
+    environment:
+      - ELASTICSEARCH_HOSTS=http://storage.elasticsearch.int:9200
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=internal
+        - traefik.constraint-label=internal
+        - traefik.http.routers.kibana.entrypoints=http
+        - traefik.http.services.kibana.loadbalancer.server.port=5601
+        - traefik.http.routers.kibana.rule=Host(`kibana.swarm.int`)
+        - traefik.http.routers.kibana.service=kibana@docker
+      placement:
+        constraints:
+          - node.labels.kibana == yes
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 750M
+        reservations:
+          cpus: '0.3'
+          memory: 500M
+    volumes:
+      - kibana-data:/usr/share/kibana/data
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  kibana-data:
+    driver: local
