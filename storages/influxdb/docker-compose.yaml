@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  influxdb:
+    networks:
+      - internal
+    image: influxdb:2.3.0-alpine
+    hostname: storages.influxdb.int
+    volumes:
+      - influxdb_db:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=influx
+      - DOCKER_INFLUXDB_INIT_USERNAME=influx_admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=influx_admin
+      - DOCKER_INFLUXDB_INIT_ORG=influx_demo_org
+      - DOCKER_INFLUXDB_INIT_BUCKET=influx_demo_bucket
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=internal
+        - traefik.constraint-label=internal
+        - traefik.http.routers.influxdb.entrypoints=http
+        - traefik.http.services.influxdb.loadbalancer.server.port=8086
+        - traefik.http.routers.influxdb.rule=Host(`influxdb.swarm.int`)
+        - traefik.http.routers.influxdb.service=influxdb@docker
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 750M
+        reservations:
+          cpus: '0.3'
+          memory: 500M
+      placement:
+        constraints:
+          - node.labels.influxdb == yes
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  influxdb_db:
+    driver: local

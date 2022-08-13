@@ -8,6 +8,7 @@
 
 ```shell
 127.0.0.1 dashboard.traefik.int
+127.0.0.1 influxdb.swarm.int
 ```
 
 ### Add the labels to your nodes
@@ -25,6 +26,7 @@ docker node update --label-add kibana=yes {node id}
 1. Init the Docker swarm
 2. Create internal network: ```make network```
 3. Deploy the gateway: ```make gateway```
+4. Deploy the storages ```make storages```
 
 
 # Services

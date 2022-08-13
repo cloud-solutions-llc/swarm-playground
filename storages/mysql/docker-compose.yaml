@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8-oracle
+    networks:
+      - internal
+    hostname: storages.mysql.int
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: swarm_local
+    restart: always
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 750M
+        reservations:
+          cpus: '0.3'
+          memory: 500M
+      placement:
+        constraints:
+          - node.labels.mysql == yes
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  mysql:
+    driver: local
