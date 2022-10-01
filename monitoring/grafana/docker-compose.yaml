@@ -30,7 +30,7 @@ services:
           memory: 128M
       placement:
         constraints:
-          - node.role == manager
+          - node.labels.grafana == yes
 
 networks:
   internal:
