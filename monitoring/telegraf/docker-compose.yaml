@@ -7,7 +7,8 @@ services:
       - internal
     environment:
       # Change this token for your env
-      - INFLUX_TOKEN=OY7nj_72FVZYkhoNKPA5pmo6Mu8y3nE8H8RYnZ8pLkN4zLEMBbq0B5DVV2_IUqUYMFxK-w4-tstFlcgd74t7eQ==
+      - INFLUX_TOKEN=Dh6dcEKqGLPqWbPWExmISIih45KEIMI0Q2Z0zDjOV41JswIChawxxZtm3vJg6S98n73qm12OktASrcshNBT3fA==
+      - HOSTNAME={{.Node.Hostname}}
     deploy:
       mode: global
       resources:
@@ -19,7 +20,6 @@ services:
           memory: 128M
     volumes:
       - ${PWD}/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 networks:
   internal:
