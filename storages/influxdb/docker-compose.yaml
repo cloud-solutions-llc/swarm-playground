@@ -6,8 +6,12 @@ services:
       - internal
     image: influxdb:2.3.0-alpine
     hostname: storages.influxdb.int
+    ports:
+      - "8086:8086"
     volumes:
-      - influxdb_db:/var/lib/influxdb
+      - influxdb_data:/root/.influxdbv2
+      - influxdb_db_data:/var/lib/influxdb2
+      - influxdb_etc:/etc/influxdb2
     environment:
       - INFLUXDB_DB=influx
       - DOCKER_INFLUXDB_INIT_USERNAME=influx_admin
@@ -40,5 +44,9 @@ networks:
     external: true
 
 volumes:
-  influxdb_db:
+  influxdb_data:
+    driver: local
+  influxdb_db_data:
+    driver: local
+  influxdb_etc:
     driver: local
