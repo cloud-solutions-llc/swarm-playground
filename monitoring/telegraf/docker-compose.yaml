@@ -3,11 +3,12 @@ version: "3.8"
 services:
   telegraf:
     image: telegraf:1.23.3-alpine
+    hostname: metrics.telegraf.int
     networks:
       - internal
     environment:
       # Change this token for your env
-      - INFLUX_TOKEN=Dh6dcEKqGLPqWbPWExmISIih45KEIMI0Q2Z0zDjOV41JswIChawxxZtm3vJg6S98n73qm12OktASrcshNBT3fA==
+      - INFLUX_TOKEN=2fX6xkKsrtXOQYzzoFn3C4oMnMCI2V8KScArqLn9lk-xLfhK5BAC6mWjJCx6rF_uON839tMJDY8QLpnpZkuuDQ==
       - HOSTNAME={{.Node.Hostname}}
     deploy:
       mode: global
