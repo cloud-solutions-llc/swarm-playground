@@ -9,8 +9,6 @@ services:
     volumes:
       - redis-queue:/var/lib/redis
     restart: always
-    ports:
-      - "6380:6380"
     deploy:
       replicas: 1
       resources:
