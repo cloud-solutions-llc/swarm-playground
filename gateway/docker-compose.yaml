@@ -21,6 +21,14 @@ services:
       - --tracing.jaeger.localAgentHostPort=http://opentracing.jaeger.int:6831
       - --tracing.jaeger.traceContextHeaderName=uber-trace-id
       - --tracing.jaeger.collector.endpoint=http://opentracing.jaeger.int:14268/api/traces?format=jaeger.thrift
+      - --metrics.influxdb2=true
+      - --metrics.influxdb2.address=http://storages.influxdb.int:8086
+      - --metrics.influxdb2.token=M9J_67mH_UIHIyuMXNEz2qOVTOGBrBj9WfSNNuzlDH--aqNgO-s6PACFCEzvrMT3MTPzeyAKNpXuEZYPFLI3CA==
+      - --metrics.influxdb2.org=influx_demo_org
+      - --metrics.influxdb2.bucket=traefik_bucket
+      - --metrics.influxdb2.addEntryPointsLabels=true
+      - --metrics.influxdb2.addrouterslabels=true
+      - --metrics.influxdb2.addServicesLabels=true
       - dashboard=true
     ports:
       - "80:80"
