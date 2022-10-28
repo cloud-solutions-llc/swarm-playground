@@ -10,6 +10,7 @@
 127.0.0.1 dashboard.traefik.int
 127.0.0.1 influxdb.swarm.int
 127.0.0.1 grafana.swarm.int
+127.0.0.1 jaeger.swarm.int
 ```
 
 ### Add the labels to your nodes
@@ -32,11 +33,12 @@ docker node update --label-add kibana=yes {node id}
 
 # Services
 
-| HTTP URL                                              | Service                |
-|-------------------------------------------------------|------------------------|
-| [dashboard.traefik.int](http://dashboard.traefik.int) | The trafiek dashboard  |
+| HTTP URL                                              | Service               |
+|-------------------------------------------------------|-----------------------|
+| [dashboard.traefik.int](http://dashboard.traefik.int) | The trafiek dashboard |
 | [influxdb.swarm.int](http://influxdb.swarm.int)       | The indluxdb dashboard |
-| [grafana.swarm.int](http://grafana.swarm.int)         | The grafana dashboard  |
+| [grafana.swarm.int](http://grafana.swarm.int)         | The grafana dashboard |
+| [jaeger.swarm.int](http://jaeger.swarm.int)           | The jaeger dashboard  |
 
 
 # Notes
