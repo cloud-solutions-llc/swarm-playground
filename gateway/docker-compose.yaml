@@ -16,6 +16,11 @@ services:
       - --log
       - --api
       - --serverstransport.insecureskipverify=true
+      - --tracing.jaeger=true
+      - --tracing.jaeger.samplingServerURL=http://opentracing.jaeger.int:5778/sampling
+      - --tracing.jaeger.localAgentHostPort=http://opentracing.jaeger.int:6831
+      - --tracing.jaeger.traceContextHeaderName=uber-trace-id
+      - --tracing.jaeger.collector.endpoint=http://opentracing.jaeger.int:14268/api/traces?format=jaeger.thrift
       - dashboard=true
     ports:
       - "80:80"
