@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  telegraf:
+    image: telegraf:1.23.3-alpine
+    hostname: metrics.telegraf.int
+    networks:
+      - internal
+    environment:
+      # Change this token for your env
+      - INFLUX_TOKEN=2fX6xkKsrtXOQYzzoFn3C4oMnMCI2V8KScArqLn9lk-xLfhK5BAC6mWjJCx6rF_uON839tMJDY8QLpnpZkuuDQ==
+      - HOSTNAME={{.Node.Hostname}}
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    volumes:
+      - ${PWD}/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+networks:
+  internal:
+    external: true

@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  jaegertracing:
+    image: jaegertracing/all-in-one:1.38
+    hostname: opentracing.jaeger.int
+    networks:
+      - internal
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=internal
+        - traefik.constraint-label=internal
+        - traefik.http.routers.jaeger.entrypoints=http
+        - traefik.http.services.jaeger.loadbalancer.server.port=16686
+        - traefik.http.routers.jaeger.rule=Host(`jaeger.swarm.int`)
+        - traefik.http.routers.jaeger.service=jaeger@docker
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  internal:
+    external: true
