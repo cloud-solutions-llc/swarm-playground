@@ -6,13 +6,13 @@ services:
     networks:
       - internal
     command:
-      - --log.level=DEBUG
+      - --log.level=ERROR
       - --providers.docker.constraints=Label(`traefik.constraint-label`, `internal`)
       - --entrypoints.http.address=:80
       - --providers.docker
       - --providers.docker.swarmmode
       - --providers.docker.exposedbydefault=false
-      - --accesslog
+#      - --accesslog
       - --log
       - --api
       - --serverstransport.insecureskipverify=true

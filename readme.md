@@ -8,6 +8,7 @@
 
 ```shell
 127.0.0.1 dashboard.traefik.int
+127.0.0.1 kibana.swarm.int
 127.0.0.1 influxdb.swarm.int
 127.0.0.1 grafana.swarm.int
 127.0.0.1 jaeger.swarm.int
@@ -22,6 +23,7 @@ docker node update --label-add redis-queue=yes {node id}
 docker node update --label-add influxdb=yes {node id}
 docker node update --label-add grafana=yes {node id}
 docker node update --label-add kibana=yes {node id}
+docker node update --label-add elasticsearch=yes {node id}
 ```
 
 ### Next, do the main things:

@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.3.3
+    command: ["--strict.perms=false"]
+    hostname: "{{.Node.Hostname}}-filebeat"
+    user: root
+    networks:
+      - internal
+    environment:
+      - KIBANA_HOST=logs.kibana.int:5601
+      - ELASTICSEARCH_HOST=storage.elasticsearch.int:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=changeme
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '1.15'
+          memory: 750M
+        reservations:
+          cpus: '1'
+          memory: 500M
+    volumes:
+      - logstash-data:/usr/share/filebeat/data
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # This is needed for filebeat to load logs for system and auth modules
+      - /var/log/:/var/log/:ro
+    configs:
+      - source: filebeat-config
+        target: /usr/share/filebeat/filebeat.yml
+
+configs:
+  filebeat-config:
+    external: true
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  logstash-modules:
+    driver: local
+  logstash-data:
+    driver: local
