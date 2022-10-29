@@ -4,7 +4,7 @@ services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.3.3
     command: ["--strict.perms=false"]
-    hostname: logs.filebeat.int
+    hostname: "{{.Node.Hostname}}-filebeat"
     user: root
     networks:
       - internal
