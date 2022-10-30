@@ -5,6 +5,10 @@ services:
     image: traefik:v2.8
     networks:
       - internal
+    labels:
+      app: traefik
+      role: gateway
+      namespace: infra
     command:
       - --log.level=ERROR
       - --providers.docker.constraints=Label(`traefik.constraint-label`, `internal`)
@@ -12,7 +16,6 @@ services:
       - --providers.docker
       - --providers.docker.swarmmode
       - --providers.docker.exposedbydefault=false
-#      - --accesslog
       - --log
       - --api
       - --serverstransport.insecureskipverify=true
@@ -40,6 +43,14 @@ services:
         - traefik.http.routers.traefik.rule=Host(`dashboard.traefik.int`)
         - traefik.http.routers.traefik.service=api@internal
         - traefik.http.services.traefik.loadbalancer.server.port=9999
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
       placement:
         constraints:
           - node.role == manager

@@ -2,6 +2,10 @@
 network:
 	sh ./network/deploy.sh
 
+.PHONY: env
+env:
+	cp ./.env.dist ./.env
+
 .PHONY: gateway
 gateway:
 	cd ./gateway && sh ./deploy.sh && cd ..

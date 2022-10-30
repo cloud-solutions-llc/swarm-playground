@@ -6,11 +6,15 @@ services:
     hostname: storage.elasticsearch.int
     networks:
       - internal
+    labels:
+      app: elasticsearch
+      role: storage
+      namespace: infra
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
-      - ELASTIC_USERNAME=elastic
-      - ELASTIC_PASSWORD=changeme
+      - ELASTIC_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
     deploy:
       placement:
         constraints:
@@ -18,13 +22,15 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '1.5'
-          memory: 2500M
+          cpus: '0.75'
+          memory: 750M
         reservations:
-          cpus: '1'
-          memory: 1500M
+          cpus: '0.5'
+          memory: 512M
     volumes:
       - shared-data:/usr/share/elasticsearch/data
+    env_file:
+      - ${PWD}/../../.env
 
 networks:
   internal:

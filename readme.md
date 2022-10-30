@@ -4,6 +4,13 @@
 
 # How to run it
 
+### Prepare env files
+**You need to modify env files for your cluster**
+
+```shell
+make env
+```
+
 ### Modify your hosts file by path: ```/etc/hosts```
 
 ```shell
@@ -26,6 +33,7 @@ docker node update --label-add grafana=yes {node id}
 docker node update --label-add kibana=yes {node id}
 docker node update --label-add elasticsearch=yes {node id}
 docker node update --label-add rabbitmq=yes {node id}
+docker node update --label-add jaeger=yes {node id}
 ```
 
 ### Next, do the main things:
