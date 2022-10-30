@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.9.24-management
+    hostname: queue.rabbitmq.int
+    networks:
+      - internal
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=internal
+        - traefik.constraint-label=internal
+        - traefik.http.routers.rabbitmq.entrypoints=http
+        - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
+        - traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.swarm.int`)
+        - traefik.http.routers.rabbitmq.service=rabbitmq@docker
+      replicas: 1
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1024M
+        reservations:
+          cpus: '1.5'
+          memory: 512M
+      placement:
+        constraints:
+          - node.labels.rabbitmq == yes
+    volumes:
+      - ${PWD}/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - rabbitmq-data:/var/lib/rabbitmq/
+      - rabbitmq-logs:/var/log/rabbitmq
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  rabbitmq-data:
+    driver: local
+  rabbitmq-logs:
+    driver: local
