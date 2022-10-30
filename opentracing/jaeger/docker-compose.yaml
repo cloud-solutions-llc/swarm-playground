@@ -6,6 +6,10 @@ services:
     hostname: opentracing.jaeger.int
     networks:
       - internal
+    labels:
+      app: jaegertracing
+      role: agent
+      namespace: infra
     deploy:
       labels:
         - traefik.enable=true
@@ -17,7 +21,7 @@ services:
         - traefik.http.routers.jaeger.service=jaeger@docker
       placement:
         constraints:
-          - node.role == manager
+          - node.labels.jaeger == yes
 
 networks:
   internal:

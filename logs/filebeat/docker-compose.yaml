@@ -8,29 +8,34 @@ services:
     user: root
     networks:
       - internal
+    labels:
+      app: filebeat
+      role: agent
+      namespace: infra
     environment:
       - KIBANA_HOST=logs.kibana.int:5601
       - ELASTICSEARCH_HOST=storage.elasticsearch.int:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=changeme
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
     deploy:
       mode: global
       resources:
         limits:
-          cpus: '1.15'
-          memory: 750M
+          cpus: '0.2'
+          memory: 256M
         reservations:
-          cpus: '1'
-          memory: 500M
+          cpus: '0.1'
+          memory: 128M
     volumes:
       - logstash-data:/usr/share/filebeat/data
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # This is needed for filebeat to load logs for system and auth modules
       - /var/log/:/var/log/:ro
     configs:
       - source: filebeat-config
         target: /usr/share/filebeat/filebeat.yml
+    env_file:
+      - ${PWD}/../../.env
 
 configs:
   filebeat-config:

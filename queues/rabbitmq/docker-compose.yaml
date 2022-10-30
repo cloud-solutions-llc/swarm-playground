@@ -6,11 +6,15 @@ services:
     hostname: queue.rabbitmq.int
     networks:
       - internal
+    labels:
+      app: rabbitmq
+      role: queue
+      namespace: infra
     environment:
-      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-      RABBITMQ_DEFAULT_USER: "rabbitmq"
-      RABBITMQ_DEFAULT_PASS: "rabbitmq"
-      RABBITMQ_DEFAULT_VHOST: "/"
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
     deploy:
       labels:
         - traefik.enable=true
@@ -23,11 +27,11 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '2'
-          memory: 1024M
+          cpus: '0.3'
+          memory: 256M
         reservations:
-          cpus: '1.5'
-          memory: 512M
+          cpus: '0.2'
+          memory: 128M
       placement:
         constraints:
           - node.labels.rabbitmq == yes
@@ -35,6 +39,8 @@ services:
       - ${PWD}/enabled_plugins:/etc/rabbitmq/enabled_plugins
       - rabbitmq-data:/var/lib/rabbitmq/
       - rabbitmq-logs:/var/log/rabbitmq
+    env_file:
+      - ${PWD}/../../.env
 
 networks:
   internal:

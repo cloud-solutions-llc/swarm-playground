@@ -5,6 +5,10 @@ services:
     image: mysql:8-oracle
     networks:
       - internal
+    labels:
+      app: mysql
+      role: storage
+      namespace: infra
     hostname: storages.mysql.int
     command: --default-authentication-plugin=mysql_native_password
     ports:
@@ -12,8 +16,8 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: swarm_local
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     restart: always
     deploy:
       replicas: 1
@@ -24,9 +28,13 @@ services:
         reservations:
           cpus: '0.3'
           memory: 500M
+      restart_policy:
+        condition: on-failure
       placement:
         constraints:
           - node.labels.mysql == yes
+    env_file:
+      - ${PWD}/../../.env
 
 networks:
   internal:

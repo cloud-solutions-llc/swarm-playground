@@ -4,20 +4,23 @@ services:
   influxdb:
     networks:
       - internal
+    labels:
+      app: influxdb
+      role: storage
+      namespace: infra
     image: influxdb:2.3.0-alpine
     hostname: storages.influxdb.int
-    ports:
-      - "8086:8086"
     volumes:
       - influxdb_data:/root/.influxdbv2
       - influxdb_db_data:/var/lib/influxdb2
       - influxdb_etc:/etc/influxdb2
     environment:
-      - INFLUXDB_DB=influx
-      - DOCKER_INFLUXDB_INIT_USERNAME=influx_admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=influx_admin
-      - DOCKER_INFLUXDB_INIT_ORG=influx_demo_org
-      - DOCKER_INFLUXDB_INIT_BUCKET=influx_demo_bucket
+      - INFLUXDB_DB=${INFLUXDB_DB}
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_INIT_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_INIT_BUCKET}
+    restart: always
     deploy:
       labels:
         - traefik.enable=true
@@ -31,14 +34,17 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 750M
+          memory: 512M
         reservations:
           cpus: '0.3'
-          memory: 500M
+          memory: 256M
+      restart_policy:
+        condition: on-failure
       placement:
         constraints:
           - node.labels.influxdb == yes
-
+    env_file:
+      - ${PWD}/../../.env
 networks:
   internal:
     external: true
