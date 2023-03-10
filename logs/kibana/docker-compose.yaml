@@ -8,6 +8,10 @@ services:
       - internal
     environment:
       - ELASTICSEARCH_HOSTS=http://storage.elasticsearch.int:9200
+    labels:
+      app: kibana
+      role: web
+      namespace: infra
     deploy:
       labels:
         - traefik.enable=true
@@ -23,11 +27,11 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '0.5'
-          memory: 750M
-        reservations:
           cpus: '0.3'
-          memory: 500M
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
     volumes:
       - kibana-data:/usr/share/kibana/data
 

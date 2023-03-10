@@ -4,11 +4,16 @@ services:
   telegraf:
     image: telegraf:1.23.3-alpine
     hostname: metrics.telegraf.int
+    labels:
+      app: telegraf
+      role: agent
+      namespace: infra
     networks:
       - internal
     environment:
-      # Change this token for your env
-      - INFLUX_TOKEN=2fX6xkKsrtXOQYzzoFn3C4oMnMCI2V8KScArqLn9lk-xLfhK5BAC6mWjJCx6rF_uON839tMJDY8QLpnpZkuuDQ==
+      - INFLUX_TOKEN=${TELEGRAF_INFLUX_TOKEN}
+      - INFLUX_ORGANIZATION=${INFLUXDB_INIT_ORG}
+      - INFLUX_BUCKET=${INFLUXDB_INIT_BUCKET}
       - HOSTNAME={{.Node.Hostname}}
     deploy:
       mode: global
@@ -21,6 +26,8 @@ services:
           memory: 128M
     volumes:
       - ${PWD}/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    env_file:
+      - ${PWD}/../../.env
 
 networks:
   internal:
